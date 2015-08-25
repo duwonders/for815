@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+	<meta charset="utf-8">
+	<title>红岩搞基平台</title>
+</head>
+<body>
+	<input type="text" placeholder="账号" id="username">
+	<input type="password" placeholer="密码" id="password">
+	<button id="submit">登陆</button>
+	<script type="text/javascript">
+	var sub = document.getElementById('submit');
+	sub.onclick = function(){
+		var username = document.getElementById("username").value;
+		var password = document.getElementById("password").value;
+		var config = {};
+		config.username = username;
+		config.password = password;
+		var usent = JSON.stringify(config);
+		console.log(usent);
+		xhr = new XMLHttpRequest();
+		xhr.open("POST", "checklog.php");
+		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		xhr.send('message='+usent);
+		xhr.onload = function(){
+			var data = JSON.parse(xhr.responseText);
+			if(data.status == 'ok'){
+				window.location.href = "index.php"; 
+			}else{
+				alert("验证失败");
+			}
+		}
+	}
+	</script>
+</body>
+</html>
+

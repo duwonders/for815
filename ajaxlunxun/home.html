@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+	<meta charset="utf-8">
+	<title>红岩搞基平台</title>
+	<style type="text/css">
+	#chating{
+		width: 700px;
+		height: 500px;
+		background-color: #66cccc;
+		position: absolute;;
+		left: 300px;
+		top: 100px;
+	}
+	#input{
+		width: 200px;
+		height: 100px;
+	}
+	body{
+		font-family: "微软雅黑";
+	}
+	</style>
+</head>
+<body>
+	<textarea id="input"></textarea>
+	<button id="submit">submit</button>
+	<div id="chating">
+	</div>
+	<script type="text/javascript">
+	function ajaxfor(){
+		var id = document.getElementsByTagName('p').length;
+		var xhr = new XMLHttpRequest();
+		xhr.open("POST", "putcomment.php?id="+id);
+		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		xhr.send();
+		xhr.onload = function(){
+			var data = JSON.parse(xhr.responseText);
+			if(data.status){      //判断是否有新的信息
+				var n = 0;
+				for(var i in data){  //获取对象长度
+					n++;
+				}
+				for(i = 0; i < n - 1; i++){
+					var father = document.getElementById('chating');
+					var son = document.createElement("p");
+					son.innerHTML = data[i].username+": "+data[i].comment;
+					father.appendChild(son);
+				}
+			}
+		}
+	}
+	setInterval("ajaxfor()", 100);
+	//ajax轮询部分
+
+	var submit = document.getElementById('submit');
+	submit.onclick = function(){
+		var comment = document.getElementById('input').value;
+		var config = {};
+		config.comment = comment;
+		var usent = JSON.stringify(config);
+		var xhr = new XMLHttpRequest();
+		xhr.open("POST", "getcomment.php");
+		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		xhr.send('comment='+usent);
+		xhr.onload = function(){
+			var data = JSON.parse(xhr.responseText);
+			if(!data.status){
+				alert("发送失败");
+			}
+		}
+	}//发送对话部分
+	</script>
+</body>
+</html>

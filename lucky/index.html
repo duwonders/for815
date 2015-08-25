@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf8">
+	<title>在线秒杀抽奖</title>
+	<style type="text/css">
+	.father{
+		width: 100%;
+	}
+	#result{
+		text-align: center;
+		font-color: red;
+		font-size: 40px;
+	}
+	#btn1{
+		position: relative;
+		left: 40%;
+		width: 70px;
+		height: 40px;
+		margin: auto;
+	}
+	#btn2{
+		position: relative;
+		left: 48%;
+		width: 70px;
+		height: 40px;
+		margin: auto;
+	}
+	</style>
+</head>
+<body>
+	<div class="father"><p id="result">奖品栏位</p></div>
+	<div class="father">
+		<button id="btn1">开始</button>
+		<button id="btn2">停止</button>
+	</div>
+	<script type="text/javascript">
+	var result = document.getElementById('result');
+	var btn1 = document.getElementById('btn1');
+	var btn2 = document.getElementById('btn2');
+	var interval;
+	var award = ['iphone4s', 'iphone5s', 'iphone6s', 'imac', 'mac pro', 'mac air'];
+	btn2.disabled = true;
+	btn1.onclick = function(){
+		interval = setInterval('cartoon()', 100);
+		btn1.disabled = true;
+		btn2.disabled = false;
+	}
+	//开始的方法，播放动画
+
+	btn2.onclick = function(){
+		clearInterval(interval);
+		btn1.disabled = false;
+		btn2.disabled = true;
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET', 'lucky.php');
+		xhr.send();
+		xhr.onload = function(){
+			callback(xhr.responseText);
+		}
+	}
+	//结束方法，结束动画，获取奖品，显示
+
+	function cartoon(){
+		var i = Math.floor(Math.random()*award.length);
+		result.innerHTML = award[i];
+	}
+	//动画函数
+
+	function callback(data){
+		if(data){
+			result.innerHTML = data;
+		}else{
+			result.innerHTML = '奖品已被抽完';
+		}
+	}
+	//回调函数 
+	</script>
+</body>
+</html>
